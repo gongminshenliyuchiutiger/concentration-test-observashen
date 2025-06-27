@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KCPT-2學前兒童專注力測試觀察記錄系統 (10分鐘版)</title>
+    <title>兒童專注力測試觀察記錄系統</title>
     <!-- 引入 Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -97,8 +97,120 @@
         .report-buttons { text-align: right; margin-top: 20px; }
         .report-buttons button { padding: 10px 20px; font-size: 1em; border: none; border-radius: 5px; cursor: pointer; color: white; margin-left: 10px; }
         #exportPdfBtn { background-color: #c0392b; }
-        #exportTxtBtn { background-color: #2980b9; } /* 改成TxtBtn */
+        #exportTxtBtn { background-color: #2980b9; }
         #closeReportBtn { background-color: #7f8c8d; }
+        
+        /* --- 使用說明彈窗 --- */
+        .help-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.6em; /* 稍微調整大小以適應圖示 */
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        /* 【修正】確保圖示置中，覆蓋全域的 margin-right */
+        .help-btn .fa-solid {
+            margin-right: 0;
+        }
+        .help-btn:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+        .help-modal {
+            display: none; /* 預設隱藏 */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 初始置中 */
+            width: 500px;
+            min-width: 350px;
+            height: 60vh;
+            min-height: 300px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+            z-index: 1010;
+            flex-direction: column;
+            overflow: hidden; /* 讓內容在邊界內 */
+        }
+        .help-modal-header {
+            padding: 10px 15px;
+            background-color: #34495e;
+            color: white;
+            cursor: move; /* 拖曳提示 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+        .help-modal-header span {
+            font-weight: 600;
+        }
+        .close-modal-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8em;
+            line-height: 1;
+            cursor: pointer;
+            opacity: 0.8;
+            padding: 0 5px;
+        }
+        .close-modal-btn:hover {
+            opacity: 1;
+        }
+        .help-modal-content {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto; /* 內容過多時顯示滾動條 */
+        }
+        .help-modal-content h4 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+        .help-modal-content ul {
+            padding-left: 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+        .help-modal-content li {
+            margin-bottom: 10px;
+        }
+        .help-modal-content code {
+            background-color: #ecf0f1;
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #c0392b;
+        }
+        .resize-handle {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 15px;
+            height: 15px;
+            cursor: se-resize; /* 縮放提示 */
+            background: repeating-linear-gradient(
+              -45deg,
+              rgba(0,0,0,0.1),
+              rgba(0,0,0,0.1) 2px,
+              transparent 2px,
+              transparent 4px
+            );
+        }
 
         /* --- 列印專用樣式 --- */
         @media print {
@@ -118,7 +230,7 @@
 
     <div class="wrapper">
         <div class="container" id="main-container">
-            <h1><i class="fa-solid fa-clipboard-list"></i>KCPT-2學前兒童專注力測試觀察記錄系統</h1>
+            <h1><i class="fa-solid fa-clipboard-list"></i>兒童專注力測試觀察記錄系統</h1>
             <p class="instructions">
                 請先輸入觀察人與被觀察人姓名。點擊「開始」後，左鍵點擊格子增加次數，右鍵點擊減少次數。
             </p>
@@ -169,6 +281,47 @@
         </div>
     </div>
     
+    <!-- 使用說明按鈕 【圖示已更換】-->
+    <button id="helpBtn" class="help-btn" title="使用說明">
+        <i class="fa-solid fa-book"></i>
+    </button>
+    
+    <!-- 使用說明彈出視窗 【圖示已更換】-->
+    <div id="helpModal" class="help-modal">
+        <div class="help-modal-header" id="helpModalHeader">
+            <span><i class="fa-solid fa-book"></i> 使用說明</span>
+            <button class="close-modal-btn" id="closeHelpModalBtn" title="關閉">&times;</button>
+        </div>
+        <div class="help-modal-content">
+            <h4>基本操作</h4>
+            <ul>
+                <li>在「觀察人姓名」與「被觀察人姓名」欄位輸入對應資訊。</li>
+                <li>此視窗可以按住頂部標題欄進行拖曳，也可以拖動右下角調整大小。</li>
+            </ul>
+            <h4>計時與記錄</h4>
+            <ul>
+                <li>點擊 <i class="fa-solid fa-play"></i> <strong>開始觀察</strong> 按鈕以啟動計時器。</li>
+                <li>計時器每 30 秒為一個區間，共 10 分鐘 (20 個區間)。</li>
+                <li>當前進行中的時間區間欄位會以 <span style="background-color:#fffbe0;">黃色</span> 標示。</li>
+                <li>在對應的行為格子中，<code>滑鼠左鍵點擊</code> 可增加 1 次，<code>滑鼠右鍵點擊</code> 可減少 1 次。</li>
+                <li>計時中可隨時點擊 <i class="fa-solid fa-pause"></i> <strong>暫停</strong>，再次點擊可繼續。</li>
+            </ul>
+            <h4>資料與重置</h4>
+            <ul>
+                <li>每一列最右側的「總次數」會自動加總該行為的總發生次數。</li>
+                <li>點擊 <i class="fa-solid fa-arrow-rotate-left"></i> <strong>重置紀錄</strong> 按鈕會清空所有表格資料、姓名與備註，請謹慎使用。</li>
+                <li>下方的「整體觀察備註」可用於記錄任何表格無法涵蓋的質性描述。</li>
+            </ul>
+             <h4>報告功能</h4>
+            <ul>
+                <li>觀察完成或中途皆可點擊 <i class="fa-solid fa-file-invoice"></i> <strong>產生觀察報告</strong>。</li>
+                <li>報告中會包含詳細的數據表格，並提供「詳細行為註記」與「整體觀察備註」的文字編輯區。</li>
+                <li>在報告視窗中，可點擊 <i class="fa-solid fa-file-pdf"></i> <strong>匯出為 PDF</strong> (將觸發瀏覽器的列印功能) 或 <i class="fa-solid fa-file-lines"></i> <strong>匯出為 TXT</strong> 將報告儲存為純文字檔。</li>
+            </ul>
+        </div>
+        <div class="resize-handle" id="resizeHandle"></div>
+    </div>
+    
     <!-- 從 CDN 引入 FileSaver.js，確保匯出穩定 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
     
@@ -190,6 +343,12 @@
         const reportContent = document.getElementById('reportContent');
         const startBtnIcon = document.getElementById('startBtnIcon');
         const startBtnText = document.getElementById('startBtnText');
+        
+        const helpBtn = document.getElementById('helpBtn');
+        const helpModal = document.getElementById('helpModal');
+        const closeHelpModalBtn = document.getElementById('closeHelpModalBtn');
+        const helpModalHeader = document.getElementById('helpModalHeader');
+        const resizeHandle = document.getElementById('resizeHandle');
 
         // --- 狀態變數 ---
         const behaviors = ['Off task (分心)', 'Fidget (坐不住/扭動)', 'Out of seat (離開座位)', 'Vocalize (出聲)', 'Plays with objects (玩東西)'];
@@ -404,44 +563,31 @@
             `;
             
             reportContent.innerHTML = fullReportHTML;
-
             const mainNotesValue = generalNotesTextarea.value;
             document.getElementById('reportGeneralNotesTextarea').value = mainNotesValue;
-
             reportOverlay.style.display = 'flex';
-
             document.getElementById('exportTxtBtn').addEventListener('click', exportToTxt);
             document.getElementById('exportPdfBtn').addEventListener('click', () => window.print());
             document.getElementById('closeReportBtn').addEventListener('click', () => reportOverlay.style.display = 'none');
         }
 
-        // 【全新】匯出為 TXT 的函數
         function exportToTxt() {
-            // 檢查 saveAs 函數是否存在
             if (typeof saveAs === 'undefined') {
                 alert('檔案儲存工具載入失敗，請檢查網路連線並刷新頁面重試。');
                 return;
             }
-            
             const subjectName = subjectNameInput.value.trim() || '觀察報告';
             const observerName = observerNameInput.value.trim() || '（未填寫）';
             const observationDate = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
-            
             let textContent = '';
-
-            // 1. 建立報告標頭
             textContent += 'KCPT-2 觀察報告\n';
             textContent += '========================================\n';
             textContent += `被觀察人: ${subjectName}\n`;
             textContent += `觀察人: ${observerName}\n`;
             textContent += `觀察日期: ${observationDate}\n`;
             textContent += '========================================\n\n';
-
-            // 2. 建立文字格式的數據表格
-            // 輔助函數：用空格填充字串以對齊
             const padEnd = (str, length) => {
                 let s = String(str);
-                // 計算中文字元的寬度 (粗略地算為2個英文字寬)
                 const chineseChars = s.match(/[\u4e00-\u9fa5]/g) || [];
                 const effectiveLength = s.length + chineseChars.length;
                 const paddingNeeded = length > effectiveLength ? length - effectiveLength : 0;
@@ -452,17 +598,13 @@
                 const paddingNeeded = length > s.length ? length - s.length : 0;
                 return ' '.repeat(paddingNeeded) + s;
             }
-
-            // 表格標頭
             let tableHeaderTxt = padEnd('行為項目', 25);
             timeIntervals.forEach(interval => {
                 tableHeaderTxt += padStart(interval, 5);
             });
             tableHeaderTxt += padStart('總次數', 8);
             textContent += tableHeaderTxt + '\n';
-            textContent += '-'.repeat(tableHeaderTxt.length - 10) + '\n'; // 分隔線
-
-            // 表格內容
+            textContent += '-'.repeat(tableHeaderTxt.length - 10) + '\n';
             behaviors.forEach((behavior, rowIndex) => {
                 let rowTxt = padEnd(behavior, 25);
                 let total = 0;
@@ -474,8 +616,6 @@
                 textContent += rowTxt + '\n';
             });
             textContent += '\n';
-
-            // 3. 添加詳細行為註記
             textContent += '--- 詳細行為註記 ---\n';
             let hasDetailNotes = false;
             reportContent.querySelectorAll('.report-notes-section .note-item').forEach(item => {
@@ -489,8 +629,6 @@
             if (!hasDetailNotes) {
                 textContent += '(無)\n';
             }
-
-            // 4. 添加整體觀察備註
             textContent += '\n--- 整體觀察備註 ---\n';
             const reportGeneralNotesText = document.getElementById('reportGeneralNotesTextarea').value;
             if (reportGeneralNotesText.trim()) {
@@ -498,23 +636,102 @@
             } else {
                 textContent += '(無)\n';
             }
-
-            // 5. 建立 Blob 並下載
-            const blob = new Blob([textContent], {
-                type: 'text/plain;charset=utf-8'
-            });
-            
+            const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
             saveAs(blob, `${subjectName}_KCPT-2_觀察報告.txt`);
         }
-
 
         // --- 事件監聽器 ---
         startBtn.addEventListener('click', handleStartPauseResume);
         resetBtn.addEventListener('click', handleReset);
         reportBtn.addEventListener('click', generateReport);
-
-        // --- 初始啟動 ---
         initialize();
+        
+        // --- 說明視窗互動邏輯 ---
+        helpBtn.addEventListener('click', () => {
+            helpModal.style.display = 'flex';
+        });
+        closeHelpModalBtn.addEventListener('click', () => {
+            helpModal.style.display = 'none';
+        });
+
+        // 拖曳功能 【程式碼已修正】
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        helpModalHeader.addEventListener('mousedown', (e) => {
+            // 只允許滑鼠左鍵拖曳
+            if (e.button !== 0) return;
+            
+            isDragging = true;
+            
+            // 【修正拖曳跳動問題的核心】
+            // 1. 獲取當前視窗的視覺位置
+            const rect = helpModal.getBoundingClientRect();
+            
+            // 2. 將 transform/百分比 定位轉換為固定的 pixel 定位
+            //    這樣可以避免 transform 屬性對後續位置計算的干擾
+            helpModal.style.transform = 'none';
+            helpModal.style.left = `${rect.left}px`;
+            helpModal.style.top = `${rect.top}px`;
+            
+            // 3. 現在，基於固定的 pixel 位置計算滑鼠點擊處的偏移量
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+
+            // 優化使用者體驗：改變游標、禁止選取文字
+            helpModalHeader.style.cursor = 'grabbing';
+            document.body.style.userSelect = 'none';
+
+            e.preventDefault();
+            
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+
+        function onMouseMove(e) {
+            if (!isDragging) return;
+            let newX = e.clientX - offsetX;
+            let newY = e.clientY - offsetY;
+            helpModal.style.left = `${newX}px`;
+            helpModal.style.top = `${newY}px`;
+        }
+
+        function onMouseUp() {
+            isDragging = false;
+            
+            // 恢復游標和文字選取
+            helpModalHeader.style.cursor = 'move';
+            document.body.style.userSelect = '';
+
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        // 縮放功能
+        let isResizing = false;
+        resizeHandle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            e.preventDefault();
+            document.body.style.userSelect = 'none'; // 縮放時也禁止選取
+            document.addEventListener('mousemove', onResizeMove);
+            document.addEventListener('mouseup', onResizeUp);
+        });
+
+        function onResizeMove(e) {
+            if (!isResizing) return;
+            const rect = helpModal.getBoundingClientRect();
+            const newWidth = e.clientX - rect.left;
+            const newHeight = e.clientY - rect.top;
+            helpModal.style.width = `${newWidth}px`;
+            helpModal.style.height = `${newHeight}px`;
+        }
+
+        function onResizeUp() {
+            isResizing = false;
+            document.body.style.userSelect = ''; // 恢復文字選取
+            document.removeEventListener('mousemove', onResizeMove);
+            document.removeEventListener('mouseup', onResizeUp);
+        }
     });
     </script>
 </body>
