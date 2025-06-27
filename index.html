@@ -54,13 +54,48 @@
         #reportBtn:hover { background-color: #2980b9; }
         button:disabled { background-color: #bdc3c7; cursor: not-allowed; }
 
-        /* --- 觀察記錄表格樣式 --- */
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #bdc3c7; padding: 12px 8px; text-align: center; min-width: 50px; }
-        th { background-color: #ecf0f1; font-weight: 600; color: #2c3e50; }
-        td.behavior-label { text-align: left; font-weight: 500; background-color: #f8f9fa; white-space: nowrap; }
-        td.data-cell { cursor: pointer; font-size: 1.2em; font-weight: bold; color: #34495e; user-select: none; transition: background-color 0.2s; }
+        /* --- 觀察記錄表格樣式 (已修改) --- */
+        .table-container { 
+            overflow-x: auto; /* 在窄螢幕上提供水平滾動條 */
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 20px; 
+            table-layout: fixed; /* 【修改】使用固定佈局，讓寬度設定更有效 */
+        }
+        th, td { 
+            border: 1px solid #bdc3c7; 
+            padding: 12px 8px; 
+            text-align: center;
+            word-wrap: break-word; /* 避免內容撐開 */
+        }
+        th { 
+            background-color: #ecf0f1; 
+            font-weight: 600; 
+            color: #2c3e50; 
+        }
+        /* 【新增】設定特定欄位的寬度 */
+        th:first-child, td.behavior-label {
+            width: 220px; /* 加寬行為項目欄 */
+        }
+        th:last-child, td.total-cell {
+            width: 80px; /* 設定總次數欄寬度 */
+        }
+        td.behavior-label { 
+            text-align: left; 
+            font-weight: 500; 
+            background-color: #f8f9fa; 
+            white-space: normal; /* 允許行為項目換行 */
+        }
+        td.data-cell { 
+            cursor: pointer; 
+            font-size: 1.2em; 
+            font-weight: bold; 
+            color: #34495e; 
+            user-select: none; 
+            transition: background-color 0.2s; 
+        }
         td.data-cell:hover { background-color: #e0e9f0; }
         td.total-cell { font-weight: bold; background-color: #e8f4fd; }
         .current-column { background-color: #fffbe0 !important; }
@@ -83,9 +118,29 @@
         #reportHeader { text-align: center; margin-bottom: 25px; }
         #reportHeader h2 { margin-top: 0; margin-bottom: 10px; color: #2c3e50; }
         #reportHeader p { margin: 5px 0; color: #555; }
-        .report-detailed-table table { width: 100%; font-size: 0.9em; border-collapse: collapse; }
-        .report-detailed-table th, .report-detailed-table td { border: 1px solid #ccc; padding: 6px; text-align: center; }
+        
+        /* 【修改】報告中的表格樣式 */
+        .report-detailed-table table { 
+            width: 100%; 
+            font-size: 0.9em; 
+            border-collapse: collapse;
+            table-layout: fixed; /* 同樣使用固定佈局 */
+        }
+        .report-detailed-table th, .report-detailed-table td { 
+            border: 1px solid #ccc; 
+            padding: 6px; 
+            text-align: center; 
+            word-wrap: break-word;
+        }
         .report-detailed-table th { background-color: #f2f2f2; }
+        /* 【新增】報告中表格的欄寬 */
+        .report-detailed-table th:first-child, .report-detailed-table td:first-child {
+            width: 18%; /* 百分比寬度，適應性更好 */
+        }
+        .report-detailed-table th:last-child, .report-detailed-table td:last-child {
+            width: 8%;
+        }
+
         .report-notes-section { margin-top: 30px; }
         .report-notes-section h3 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
         .report-notes-section .note-item { margin-bottom: 20px; }
@@ -102,126 +157,91 @@
         
         /* --- 使用說明彈窗 --- */
         .help-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 1.6em; /* 稍微調整大小以適應圖示 */
-            cursor: pointer;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
-            transition: background-color 0.3s, transform 0.2s;
+            position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; background-color: #3498db;
+            color: white; border: none; border-radius: 50%; font-size: 1.6em; cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center;
+            z-index: 1001; transition: background-color 0.3s, transform 0.2s;
         }
-        /* 【修正】確保圖示置中，覆蓋全域的 margin-right */
-        .help-btn .fa-solid {
-            margin-right: 0;
-        }
-        .help-btn:hover {
-            background-color: #2980b9;
-            transform: scale(1.1);
-        }
+        .help-btn .fa-solid { margin-right: 0; }
+        .help-btn:hover { background-color: #2980b9; transform: scale(1.1); }
         .help-modal {
-            display: none; /* 預設隱藏 */
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* 初始置中 */
-            width: 500px;
-            min-width: 350px;
-            height: 60vh;
-            min-height: 300px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-            z-index: 1010;
-            flex-direction: column;
-            overflow: hidden; /* 讓內容在邊界內 */
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 500px; min-width: 350px; height: 60vh; min-height: 300px; background-color: white;
+            border-radius: 10px; box-shadow: 0 5px 25px rgba(0,0,0,0.3); z-index: 1010;
+            flex-direction: column; overflow: hidden;
         }
         .help-modal-header {
-            padding: 10px 15px;
-            background-color: #34495e;
-            color: white;
-            cursor: move; /* 拖曳提示 */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            user-select: none;
+            padding: 10px 15px; background-color: #34495e; color: white; cursor: move;
+            display: flex; justify-content: space-between; align-items: center; user-select: none;
         }
-        .help-modal-header span {
-            font-weight: 600;
-        }
+        .help-modal-header span { font-weight: 600; }
         .close-modal-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.8em;
-            line-height: 1;
-            cursor: pointer;
-            opacity: 0.8;
-            padding: 0 5px;
+            background: none; border: none; color: white; font-size: 1.8em; line-height: 1;
+            cursor: pointer; opacity: 0.8; padding: 0 5px;
         }
-        .close-modal-btn:hover {
-            opacity: 1;
-        }
-        .help-modal-content {
-            padding: 20px;
-            flex-grow: 1;
-            overflow-y: auto; /* 內容過多時顯示滾動條 */
-        }
-        .help-modal-content h4 {
-            color: #2c3e50;
-            border-bottom: 2px solid #ecf0f1;
-            padding-bottom: 5px;
-            margin-top: 0;
-        }
-        .help-modal-content ul {
-            padding-left: 20px;
-            color: #555;
-            line-height: 1.6;
-        }
-        .help-modal-content li {
-            margin-bottom: 10px;
-        }
-        .help-modal-content code {
-            background-color: #ecf0f1;
-            padding: 2px 5px;
-            border-radius: 3px;
-            color: #c0392b;
-        }
+        .close-modal-btn:hover { opacity: 1; }
+        .help-modal-content { padding: 20px; flex-grow: 1; overflow-y: auto; }
+        .help-modal-content h4 { color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 5px; margin-top: 0; }
+        .help-modal-content ul { padding-left: 20px; color: #555; line-height: 1.6; }
+        .help-modal-content li { margin-bottom: 10px; }
+        .help-modal-content code { background-color: #ecf0f1; padding: 2px 5px; border-radius: 3px; color: #c0392b; }
         .resize-handle {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 15px;
-            height: 15px;
-            cursor: se-resize; /* 縮放提示 */
-            background: repeating-linear-gradient(
-              -45deg,
-              rgba(0,0,0,0.1),
-              rgba(0,0,0,0.1) 2px,
-              transparent 2px,
-              transparent 4px
-            );
+            position: absolute; bottom: 0; right: 0; width: 15px; height: 15px; cursor: se-resize;
+            background: repeating-linear-gradient(-45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 2px, transparent 2px, transparent 4px);
         }
 
-        /* --- 列印專用樣式 --- */
+        /* --- 列印專用樣式 (已修改) --- */
         @media print {
+            /* 【關鍵修改】設定頁面為橫向，並增加邊界 */
+            @page {
+                size: landscape;
+                margin: 1cm;
+            }
+
             body > *:not(.report-overlay) { display: none; }
-            .report-overlay { position: static; display: block !important; width: 100%; height: auto; background: none; padding: 0; margin: 0; overflow: visible; }
-            .report-content { box-shadow: none; border: none; padding: 0; margin: 0; width: 100%; max-width: 100%; max-height: none; overflow: visible; border-radius: 0; }
+            .report-overlay { 
+                position: static; display: block !important; width: 100%; height: auto; 
+                background: none; padding: 0; margin: 0; overflow: visible; 
+            }
+            .report-content { 
+                box-shadow: none; border: none; padding: 0; margin: 0; width: 100%; 
+                max-width: 100%; max-height: none; overflow: visible; border-radius: 0; 
+            }
             .report-buttons { display: none; }
-            body { padding: 0; margin: 0; background-color: #fff; }
-            .report-detailed-table table, .report-notes-section textarea, .report-general-notes textarea { font-size: 9pt; }
-            textarea { border: 1px solid #ccc !important; background-color: #fafafa !important; color: #000 !important; page-break-inside: avoid; }
-            #reportHeader h2 { font-size: 18pt; }
+            body { padding: 0; margin: 0; background-color: #fff; font-size: 10pt; }
+
+            /* 【修改】為列印環境優化表格 */
+            .report-detailed-table table {
+                width: 100%;
+                table-layout: fixed; /* 強制固定佈局以遵守寬度設定 */
+                border-collapse: collapse;
+                font-size: 8.5pt; /* 縮小字體以容納更多內容 */
+            }
+            .report-detailed-table th, 
+            .report-detailed-table td {
+                border: 1px solid #999; /* 加深邊框，列印更清晰 */
+                padding: 4px 2px; /* 減少內距 */
+                text-align: center;
+                overflow: hidden;
+                word-wrap: break-word;
+            }
+            /* 【新增】為列印設定精確的百分比欄寬 */
+            .report-detailed-table th:first-child, 
+            .report-detailed-table td:first-child {
+                width: 18%; /* 行為欄寬一點 */
+                text-align: left;
+            }
+            .report-detailed-table th:last-child,
+            .report-detailed-table td:last-child {
+                width: 7%; /* 總計欄 */
+            }
+            /* 剩下的 75% 寬度將由 20 個數據欄位均分 */
+
+            textarea { 
+                border: 1px solid #ccc !important; background-color: #fafafa !important; 
+                color: #000 !important; page-break-inside: avoid; 
+            }
+            #reportHeader h2 { font-size: 16pt; }
             tr, .note-item { page-break-inside: avoid; }
         }
     </style>
@@ -232,7 +252,7 @@
         <div class="container" id="main-container">
             <h1><i class="fa-solid fa-clipboard-list"></i>兒童專注力測試觀察記錄系統</h1>
             <p class="instructions">
-                請先輸入觀察人與被觀察人姓名。點擊「開始」後，左鍵點擊格子增加次數，右鍵點擊減少次數。
+                點擊畫面右上方「使用說明」懸浮按鈕以熟悉操作
             </p>
 
             <div class="observer-info">
@@ -281,12 +301,12 @@
         </div>
     </div>
     
-    <!-- 使用說明按鈕 【圖示已更換】-->
+    <!-- 使用說明按鈕 -->
     <button id="helpBtn" class="help-btn" title="使用說明">
         <i class="fa-solid fa-book"></i>
     </button>
     
-    <!-- 使用說明彈出視窗 【圖示已更換】-->
+    <!-- 使用說明彈出視窗 -->
     <div id="helpModal" class="help-modal">
         <div class="help-modal-header" id="helpModalHeader">
             <span><i class="fa-solid fa-book"></i> 使用說明</span>
@@ -325,7 +345,7 @@
     <!-- 從 CDN 引入 FileSaver.js，確保匯出穩定 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
     
-    <!-- 主應用程式腳本 -->
+    <!-- 主應用程式腳本 (JavaScript 無需修改) -->
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- DOM 元素 ---
@@ -547,7 +567,7 @@
 
             const fullReportHTML = `
                 <div id="reportHeader">
-                    <h2><i class="fa-solid fa-file-invoice"></i>KCPT-2 觀察報告</h2>
+                    <h2><i class="fa-solid fa-file-invoice"></i>兒童專注力測試綜合觀察報告</h2>
                     <p><b><i class="fa-solid fa-child"></i>被觀察人:</b> ${subjectName}</p>
                     <p><b><i class="fa-solid fa-user-pen"></i>觀察人:</b> ${observerName}</p>
                     <p><b><i class="fa-solid fa-calendar-days"></i>觀察日期:</b> ${observationDate}</p>
@@ -580,7 +600,7 @@
             const observerName = observerNameInput.value.trim() || '（未填寫）';
             const observationDate = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
             let textContent = '';
-            textContent += 'KCPT-2 觀察報告\n';
+            textContent += '兒童專注力測試綜合觀察報告\n';
             textContent += '========================================\n';
             textContent += `被觀察人: ${subjectName}\n`;
             textContent += `觀察人: ${observerName}\n`;
@@ -637,7 +657,7 @@
                 textContent += '(無)\n';
             }
             const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
-            saveAs(blob, `${subjectName}_KCPT-2_觀察報告.txt`);
+            saveAs(blob, `${subjectName}_兒童專注力測試綜合觀察報告.txt`);
         }
 
         // --- 事件監聽器 ---
@@ -654,36 +674,22 @@
             helpModal.style.display = 'none';
         });
 
-        // 拖曳功能 【程式碼已修正】
+        // 拖曳功能
         let isDragging = false;
         let offsetX, offsetY;
 
         helpModalHeader.addEventListener('mousedown', (e) => {
-            // 只允許滑鼠左鍵拖曳
             if (e.button !== 0) return;
-            
             isDragging = true;
-            
-            // 【修正拖曳跳動問題的核心】
-            // 1. 獲取當前視窗的視覺位置
             const rect = helpModal.getBoundingClientRect();
-            
-            // 2. 將 transform/百分比 定位轉換為固定的 pixel 定位
-            //    這樣可以避免 transform 屬性對後續位置計算的干擾
             helpModal.style.transform = 'none';
             helpModal.style.left = `${rect.left}px`;
             helpModal.style.top = `${rect.top}px`;
-            
-            // 3. 現在，基於固定的 pixel 位置計算滑鼠點擊處的偏移量
             offsetX = e.clientX - rect.left;
             offsetY = e.clientY - rect.top;
-
-            // 優化使用者體驗：改變游標、禁止選取文字
             helpModalHeader.style.cursor = 'grabbing';
             document.body.style.userSelect = 'none';
-
             e.preventDefault();
-            
             document.addEventListener('mousemove', onMouseMove);
             document.addEventListener('mouseup', onMouseUp);
         });
@@ -698,11 +704,8 @@
 
         function onMouseUp() {
             isDragging = false;
-            
-            // 恢復游標和文字選取
             helpModalHeader.style.cursor = 'move';
             document.body.style.userSelect = '';
-
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         }
@@ -712,7 +715,7 @@
         resizeHandle.addEventListener('mousedown', (e) => {
             isResizing = true;
             e.preventDefault();
-            document.body.style.userSelect = 'none'; // 縮放時也禁止選取
+            document.body.style.userSelect = 'none';
             document.addEventListener('mousemove', onResizeMove);
             document.addEventListener('mouseup', onResizeUp);
         });
@@ -728,7 +731,7 @@
 
         function onResizeUp() {
             isResizing = false;
-            document.body.style.userSelect = ''; // 恢復文字選取
+            document.body.style.userSelect = '';
             document.removeEventListener('mousemove', onResizeMove);
             document.removeEventListener('mouseup', onResizeUp);
         }
