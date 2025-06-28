@@ -21,7 +21,7 @@
         .container {
             flex: 1; background-color: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        h1 { color: #2c3e50; text-align: center; margin-bottom: 10px; }
+        h1 { color: #2c3e50; text-align: center; margin-bottom: 10px; font-size: 2em; }
         p.instructions { text-align: center; color: #555; margin-bottom: 25px; font-size: 0.9em; }
 
         /* Font Awesome 圖示間距 */
@@ -37,12 +37,13 @@
 
         /* --- 控制面板樣式 --- */
         .controls {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px; background-color: #ecf0f1; border-radius: 8px; flex-wrap: wrap;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px; background-color: #ecf0f1; border-radius: 8px; flex-wrap: wrap; gap: 15px;
         }
-        .timer-display { font-size: 2.5em; font-weight: bold; color: #3498db; font-family: 'Courier New', Courier, monospace; margin-right: 20px; display: flex; align-items: center;}
-        .status-message { font-size: 1.2em; font-weight: 500; color: #27ae60; flex-grow: 1; }
+        .timer-display { font-size: 2.5em; font-weight: bold; color: #3498db; font-family: 'Courier New', Courier, monospace; display: flex; align-items: center;}
+        .status-message { font-size: 1.2em; font-weight: 500; color: #27ae60; flex-grow: 1; text-align: left; }
+        .control-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
         .control-buttons button {
-            padding: 10px 15px; font-size: 0.9em; border: none; border-radius: 5px; cursor: pointer; color: white; transition: background-color 0.3s; margin-left: 10px; margin-top: 5px; display: inline-flex; align-items: center; justify-content: center;
+            padding: 10px 15px; font-size: 0.9em; border: none; border-radius: 5px; cursor: pointer; color: white; transition: background-color 0.3s; display: inline-flex; align-items: center; justify-content: center;
         }
         #startBtn { background-color: #2ecc71; }
         #startBtn:hover { background-color: #27ae60; }
@@ -54,47 +55,31 @@
         #reportBtn:hover { background-color: #2980b9; }
         button:disabled { background-color: #bdc3c7; cursor: not-allowed; }
 
-        /* --- 觀察記錄表格樣式 (已修改) --- */
+        /* --- 觀察記錄表格樣式 (桌機版) --- */
         .table-container { 
-            overflow-x: auto; /* 在窄螢幕上提供水平滾動條 */
+            overflow-x: auto;
         }
         table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 20px; 
-            table-layout: fixed; /* 【修改】使用固定佈局，讓寬度設定更有效 */
+            width: 100%; border-collapse: collapse; margin-top: 20px; table-layout: fixed; 
+            min-width: 1200px;
         }
         th, td { 
-            border: 1px solid #bdc3c7; 
-            padding: 12px 8px; 
-            text-align: center;
-            word-wrap: break-word; /* 避免內容撐開 */
+            border: 1px solid #bdc3c7; padding: 12px 8px; text-align: center; word-wrap: break-word; 
         }
         th { 
-            background-color: #ecf0f1; 
-            font-weight: 600; 
-            color: #2c3e50; 
+            background-color: #ecf0f1; font-weight: 600; color: #2c3e50; 
         }
-        /* 【新增】設定特定欄位的寬度 */
         th:first-child, td.behavior-label {
-            width: 220px; /* 加寬行為項目欄 */
+            width: 220px;
         }
         th:last-child, td.total-cell {
-            width: 80px; /* 設定總次數欄寬度 */
+            width: 80px;
         }
         td.behavior-label { 
-            text-align: left; 
-            font-weight: 500; 
-            background-color: #f8f9fa; 
-            white-space: normal; /* 允許行為項目換行 */
+            text-align: left; font-weight: 500; background-color: #f8f9fa; white-space: normal; 
         }
         td.data-cell { 
-            cursor: pointer; 
-            font-size: 1.2em; 
-            font-weight: bold; 
-            color: #34495e; 
-            user-select: none; 
-            transition: background-color 0.2s; 
+            cursor: pointer; font-size: 1.2em; font-weight: bold; color: #34495e; user-select: none; transition: background-color 0.2s; 
         }
         td.data-cell:hover { background-color: #e0e9f0; }
         td.total-cell { font-weight: bold; background-color: #e8f4fd; }
@@ -119,23 +104,15 @@
         #reportHeader h2 { margin-top: 0; margin-bottom: 10px; color: #2c3e50; }
         #reportHeader p { margin: 5px 0; color: #555; }
         
-        /* 【修改】報告中的表格樣式 */
         .report-detailed-table table { 
-            width: 100%; 
-            font-size: 0.9em; 
-            border-collapse: collapse;
-            table-layout: fixed; /* 同樣使用固定佈局 */
+            width: 100%; font-size: 0.9em; border-collapse: collapse; table-layout: fixed; 
         }
         .report-detailed-table th, .report-detailed-table td { 
-            border: 1px solid #ccc; 
-            padding: 6px; 
-            text-align: center; 
-            word-wrap: break-word;
+            border: 1px solid #ccc; padding: 6px; text-align: center; word-wrap: break-word;
         }
         .report-detailed-table th { background-color: #f2f2f2; }
-        /* 【新增】報告中表格的欄寬 */
         .report-detailed-table th:first-child, .report-detailed-table td:first-child {
-            width: 18%; /* 百分比寬度，適應性更好 */
+            width: 18%;
         }
         .report-detailed-table th:last-child, .report-detailed-table td:last-child {
             width: 8%;
@@ -165,10 +142,12 @@
         .help-btn .fa-solid { margin-right: 0; }
         .help-btn:hover { background-color: #2980b9; transform: scale(1.1); }
         .help-modal {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 500px; min-width: 350px; height: 60vh; min-height: 300px; background-color: white;
+            display: none; position: fixed; top: 50%; left: 50%;
+            width: 90vw; max-width: 500px;
+            height: 60vh; min-height: 300px; background-color: white;
             border-radius: 10px; box-shadow: 0 5px 25px rgba(0,0,0,0.3); z-index: 1010;
             flex-direction: column; overflow: hidden;
+            transform: translate(-50%, -50%);
         }
         .help-modal-header {
             padding: 10px 15px; background-color: #34495e; color: white; cursor: move;
@@ -190,13 +169,53 @@
             background: repeating-linear-gradient(-45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 2px, transparent 2px, transparent 4px);
         }
 
-        /* --- 列印專用樣式 (已修改) --- */
-        @media print {
-            /* 【關鍵修改】設定頁面為橫向，並增加邊界 */
-            @page {
-                size: landscape;
-                margin: 1cm;
+        /* --- 響應式設計 (手機優先) --- */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            h1 { font-size: 1.5em; }
+            p.instructions { font-size: 0.85em; }
+
+            .observer-info { flex-direction: column; gap: 15px; }
+
+            .controls { flex-direction: column; align-items: stretch; text-align: center; }
+            .timer-display { justify-content: center; font-size: 2.2em; margin-bottom: 5px; }
+            .status-message { text-align: center; margin-bottom: 10px; }
+            .control-buttons { justify-content: space-around; }
+            
+            .table-container {
+                overflow-x: visible;
             }
+            #observationTable {
+                min-width: 100%;
+                font-size: 0.7em;
+            }
+            #observationTable th, #observationTable td {
+                padding: 6px 2px;
+            }
+            #observationTable th:first-child, #observationTable td.behavior-label {
+                width: 28%;
+                font-size: 0.9em;
+            }
+            #observationTable th:last-child, #observationTable td.total-cell {
+                width: 12%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .control-buttons { flex-direction: column; gap: 10px; }
+            .control-buttons button { width: 100%; }
+            #observationTable {
+                font-size: 0.6em;
+            }
+            #observationTable th, #observationTable td {
+                padding: 4px 1px;
+            }
+        }
+
+        /* --- 列印專用樣式 --- */
+        @media print {
+            @page { size: landscape; margin: 1cm; }
 
             body > *:not(.report-overlay) { display: none; }
             .report-overlay { 
@@ -210,33 +229,18 @@
             .report-buttons { display: none; }
             body { padding: 0; margin: 0; background-color: #fff; font-size: 10pt; }
 
-            /* 【修改】為列印環境優化表格 */
             .report-detailed-table table {
-                width: 100%;
-                table-layout: fixed; /* 強制固定佈局以遵守寬度設定 */
-                border-collapse: collapse;
-                font-size: 8.5pt; /* 縮小字體以容納更多內容 */
+                width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 8.5pt;
             }
-            .report-detailed-table th, 
-            .report-detailed-table td {
-                border: 1px solid #999; /* 加深邊框，列印更清晰 */
-                padding: 4px 2px; /* 減少內距 */
-                text-align: center;
-                overflow: hidden;
-                word-wrap: break-word;
+            .report-detailed-table th, .report-detailed-table td {
+                border: 1px solid #999; padding: 4px 2px; text-align: center; overflow: hidden; word-wrap: break-word;
             }
-            /* 【新增】為列印設定精確的百分比欄寬 */
-            .report-detailed-table th:first-child, 
-            .report-detailed-table td:first-child {
-                width: 18%; /* 行為欄寬一點 */
-                text-align: left;
+            .report-detailed-table th:first-child, .report-detailed-table td:first-child {
+                width: 18%; text-align: left;
             }
-            .report-detailed-table th:last-child,
-            .report-detailed-table td:last-child {
-                width: 7%; /* 總計欄 */
+            .report-detailed-table th:last-child, .report-detailed-table td:last-child {
+                width: 7%;
             }
-            /* 剩下的 75% 寬度將由 20 個數據欄位均分 */
-
             textarea { 
                 border: 1px solid #ccc !important; background-color: #fafafa !important; 
                 color: #000 !important; page-break-inside: avoid; 
@@ -252,7 +256,7 @@
         <div class="container" id="main-container">
             <h1><i class="fa-solid fa-clipboard-list"></i>兒童專注力測試觀察記錄系統</h1>
             <p class="instructions">
-                點擊畫面右上方「使用說明」懸浮按鈕以熟悉操作
+                點擊畫面右上方「<i class="fa-solid fa-book"></i>」按鈕以熟悉操作
             </p>
 
             <div class="observer-info">
@@ -316,14 +320,14 @@
             <h4>基本操作</h4>
             <ul>
                 <li>在「觀察人姓名」與「被觀察人姓名」欄位輸入對應資訊。</li>
-                <li>此視窗可以按住頂部標題欄進行拖曳，也可以拖動右下角調整大小。</li>
+                <li>此視窗可以按住頂部標題欄進行拖曳，也可以拖動右下角調整大小。(支援滑鼠與觸控)</li>
             </ul>
             <h4>計時與記錄</h4>
             <ul>
                 <li>點擊 <i class="fa-solid fa-play"></i> <strong>開始觀察</strong> 按鈕以啟動計時器。</li>
                 <li>計時器每 30 秒為一個區間，共 10 分鐘 (20 個區間)。</li>
                 <li>當前進行中的時間區間欄位會以 <span style="background-color:#fffbe0;">黃色</span> 標示。</li>
-                <li>在對應的行為格子中，<code>滑鼠左鍵點擊</code> 可增加 1 次，<code>滑鼠右鍵點擊</code> 可減少 1 次。</li>
+                <li>在對應的行為格子中，<code>滑鼠左鍵點擊</code> (或<code>手指輕觸</code>) 可增加 1 次，<code>滑鼠右鍵點擊</code> 可減少 1 次。</li>
                 <li>計時中可隨時點擊 <i class="fa-solid fa-pause"></i> <strong>暫停</strong>，再次點擊可繼續。</li>
             </ul>
             <h4>資料與重置</h4>
@@ -345,7 +349,7 @@
     <!-- 從 CDN 引入 FileSaver.js，確保匯出穩定 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
     
-    <!-- 主應用程式腳本 (JavaScript 無需修改) -->
+    <!-- 主應用程式腳本 -->
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- DOM 元素 ---
@@ -670,71 +674,112 @@
         helpBtn.addEventListener('click', () => {
             helpModal.style.display = 'flex';
         });
+
+        // 【核心修改】為關閉按鈕同時加上 click 和 touchend 事件
+        // For mouse users
         closeHelpModalBtn.addEventListener('click', () => {
             helpModal.style.display = 'none';
         });
-
-        // 拖曳功能
-        let isDragging = false;
-        let offsetX, offsetY;
-
-        helpModalHeader.addEventListener('mousedown', (e) => {
-            if (e.button !== 0) return;
-            isDragging = true;
-            const rect = helpModal.getBoundingClientRect();
-            helpModal.style.transform = 'none';
-            helpModal.style.left = `${rect.left}px`;
-            helpModal.style.top = `${rect.top}px`;
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
-            helpModalHeader.style.cursor = 'grabbing';
-            document.body.style.userSelect = 'none';
+        // For touch users
+        closeHelpModalBtn.addEventListener('touchend', (e) => {
+            // 停止事件冒泡，防止觸發父元素(header)的拖曳事件
+            e.stopPropagation();
+            // 阻止瀏覽器在 touchend 後觸發模擬的 click 事件
             e.preventDefault();
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
+            helpModal.style.display = 'none';
         });
 
-        function onMouseMove(e) {
-            if (!isDragging) return;
-            let newX = e.clientX - offsetX;
-            let newY = e.clientY - offsetY;
-            helpModal.style.left = `${newX}px`;
-            helpModal.style.top = `${newY}px`;
+        function makeInteractive(element, header, handle) {
+            let isDragging = false;
+            let isResizing = false;
+            let offsetX, offsetY, startX, startY, startWidth, startHeight;
+
+            const getEventCoords = (e) => {
+                return e.touches ? e.touches[0] : e;
+            };
+            
+            const onDragStart = (e) => {
+                isDragging = true;
+                const coords = getEventCoords(e);
+                const rect = element.getBoundingClientRect();
+                element.style.transform = 'none';
+                element.style.left = `${rect.left}px`;
+                element.style.top = `${rect.top}px`;
+                offsetX = coords.clientX - rect.left;
+                offsetY = coords.clientY - rect.top;
+                header.style.cursor = 'grabbing';
+                document.body.style.userSelect = 'none';
+                document.addEventListener('mousemove', onDragMove);
+                document.addEventListener('mouseup', onDragEnd);
+                document.addEventListener('touchmove', onDragMove, { passive: false });
+                document.addEventListener('touchend', onDragEnd);
+                if (e.type === 'touchstart') e.preventDefault();
+            };
+
+            const onDragMove = (e) => {
+                if (!isDragging) return;
+                const coords = getEventCoords(e);
+                let newX = coords.clientX - offsetX;
+                let newY = coords.clientY - offsetY;
+                element.style.left = `${newX}px`;
+                element.style.top = `${newY}px`;
+                if (e.type === 'touchmove') e.preventDefault();
+            };
+
+            const onDragEnd = () => {
+                isDragging = false;
+                header.style.cursor = 'move';
+                document.body.style.userSelect = '';
+                document.removeEventListener('mousemove', onDragMove);
+                document.removeEventListener('mouseup', onDragEnd);
+                document.removeEventListener('touchmove', onDragMove);
+                document.removeEventListener('touchend', onDragEnd);
+            };
+
+            const onResizeStart = (e) => {
+                isResizing = true;
+                const coords = getEventCoords(e);
+                startX = coords.clientX;
+                startY = coords.clientY;
+                startWidth = parseInt(document.defaultView.getComputedStyle(element).width, 10);
+                startHeight = parseInt(document.defaultView.getComputedStyle(element).height, 10);
+                document.body.style.userSelect = 'none';
+                document.addEventListener('mousemove', onResizeMove);
+                document.addEventListener('mouseup', onResizeEnd);
+                document.addEventListener('touchmove', onResizeMove, { passive: false });
+                document.addEventListener('touchend', onResizeEnd);
+                e.preventDefault();
+            };
+
+            const onResizeMove = (e) => {
+                if (!isResizing) return;
+                const coords = getEventCoords(e);
+                const newWidth = startWidth + (coords.clientX - startX);
+                const newHeight = startHeight + (coords.clientY - startY);
+                element.style.width = `${newWidth}px`;
+                element.style.height = `${newHeight}px`;
+                if (e.type === 'touchmove') e.preventDefault();
+            };
+
+            const onResizeEnd = () => {
+                isResizing = false;
+                document.body.style.userSelect = '';
+                document.removeEventListener('mousemove', onResizeMove);
+                document.removeEventListener('mouseup', onResizeEnd);
+                document.removeEventListener('touchmove', onResizeMove);
+                document.removeEventListener('touchend', onResizeEnd);
+            };
+            
+            header.addEventListener('mousedown', onDragStart);
+            header.addEventListener('touchstart', onDragStart);
+            
+            if (handle) {
+                handle.addEventListener('mousedown', onResizeStart);
+                handle.addEventListener('touchstart', onResizeStart);
+            }
         }
 
-        function onMouseUp() {
-            isDragging = false;
-            helpModalHeader.style.cursor = 'move';
-            document.body.style.userSelect = '';
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-        }
-
-        // 縮放功能
-        let isResizing = false;
-        resizeHandle.addEventListener('mousedown', (e) => {
-            isResizing = true;
-            e.preventDefault();
-            document.body.style.userSelect = 'none';
-            document.addEventListener('mousemove', onResizeMove);
-            document.addEventListener('mouseup', onResizeUp);
-        });
-
-        function onResizeMove(e) {
-            if (!isResizing) return;
-            const rect = helpModal.getBoundingClientRect();
-            const newWidth = e.clientX - rect.left;
-            const newHeight = e.clientY - rect.top;
-            helpModal.style.width = `${newWidth}px`;
-            helpModal.style.height = `${newHeight}px`;
-        }
-
-        function onResizeUp() {
-            isResizing = false;
-            document.body.style.userSelect = '';
-            document.removeEventListener('mousemove', onResizeMove);
-            document.removeEventListener('mouseup', onResizeUp);
-        }
+        makeInteractive(helpModal, helpModalHeader, resizeHandle);
     });
     </script>
 </body>
