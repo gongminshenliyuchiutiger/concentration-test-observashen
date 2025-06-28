@@ -183,6 +183,7 @@
             .status-message { text-align: center; margin-bottom: 10px; }
             .control-buttons { justify-content: space-around; }
             
+            /* 主觀察表格: 縮小字體 */
             .table-container {
                 overflow-x: visible;
             }
@@ -199,6 +200,30 @@
             }
             #observationTable th:last-child, #observationTable td.total-cell {
                 width: 12%;
+            }
+
+            /* 【核心修改】報告彈窗響應式調整 */
+            .report-overlay { padding: 10px; }
+            .report-content { padding: 15px; }
+            #reportHeader h2 { font-size: 1.3em; }
+
+            /* 讓報告表格可以水平滾動 */
+            .report-detailed-table {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch; /* 優化iOS滾動體驗 */
+            }
+            .report-detailed-table table {
+                min-width: 900px; /* 設定最小寬度觸發滾動 */
+                font-size: 0.85em; /* 維持可讀的字體大小 */
+            }
+            
+            /* 報告按鈕垂直排列 */
+            .report-buttons {
+                text-align: center;
+            }
+            .report-buttons button {
+                width: 100%;
+                margin: 5px 0;
             }
         }
         
@@ -613,7 +638,7 @@
             const padEnd = (str, length) => {
                 let s = String(str);
                 const chineseChars = s.match(/[\u4e00-\u9fa5]/g) || [];
-                const effectiveLength = s.length + chineseChars.length;
+                const effectiveLength = s.length + (chineseChars ? chineseChars.length : 0);
                 const paddingNeeded = length > effectiveLength ? length - effectiveLength : 0;
                 return s + ' '.repeat(paddingNeeded);
             };
@@ -675,16 +700,11 @@
             helpModal.style.display = 'flex';
         });
 
-        // 【核心修改】為關閉按鈕同時加上 click 和 touchend 事件
-        // For mouse users
         closeHelpModalBtn.addEventListener('click', () => {
             helpModal.style.display = 'none';
         });
-        // For touch users
         closeHelpModalBtn.addEventListener('touchend', (e) => {
-            // 停止事件冒泡，防止觸發父元素(header)的拖曳事件
             e.stopPropagation();
-            // 阻止瀏覽器在 touchend 後觸發模擬的 click 事件
             e.preventDefault();
             helpModal.style.display = 'none';
         });
