@@ -58,25 +58,40 @@
         /* --- 觀察記錄表格樣式 (桌機版) --- */
         .table-container { 
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+            position: relative; /* Needed for sticky children in some contexts */
         }
         table { 
             width: 100%; border-collapse: collapse; margin-top: 20px; table-layout: fixed; 
-            min-width: 1200px;
+            min-width: 1200px; /* Ensure sufficient width to trigger scrolling */
         }
         th, td { 
-            border: 1px solid #bdc3c7; padding: 12px 8px; text-align: center; word-wrap: break-word; 
+            border: 1px solid #bdc3c7; padding: 12px 4px; text-align: center; word-wrap: break-word; 
         }
         th { 
             background-color: #ecf0f1; font-weight: 600; color: #2c3e50; 
         }
-        th:first-child, td.behavior-label {
+        
+        /* 凍結欄位 - 主表格 */
+        th:first-child {
             width: 220px;
+            position: sticky;
+            left: 0;
+            z-index: 3; /* Header needs to be above data cells and its own sticky column */
+            background-color: #ecf0f1; /* Match header background */
+            text-align: left; /* Keep left alignment for behavior labels */
+            padding-left: 8px;
+        }
+        td.behavior-label { 
+            width: 220px; /* Match header width */
+            text-align: left; font-weight: 500; background-color: #f8f9fa; white-space: normal; padding-left: 8px; 
+            position: sticky;
+            left: 0;
+            z-index: 1; /* Data cells should be below sticky header */
+            background-color: #f8f9fa; /* Ensure it has a background */
         }
         th:last-child, td.total-cell {
             width: 80px;
-        }
-        td.behavior-label { 
-            text-align: left; font-weight: 500; background-color: #f8f9fa; white-space: normal; 
         }
         td.data-cell { 
             cursor: pointer; font-size: 1.2em; font-weight: bold; color: #34495e; user-select: none; transition: background-color 0.2s; 
@@ -88,7 +103,7 @@
         /* --- 整體備註區 --- */
         .general-notes { margin-top: 25px; }
         .general-notes label { display: block; font-weight: 600; color: #2c3e50; margin-bottom: 10px; }
-        .general-notes textarea { width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; box-sizing: border-box; }
+        .general-notes textarea { width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; box-sizing: border-box; resize: vertical; }
 
         /* --- 頁尾 --- */
         footer { text-align: center; margin-top: 30px; padding: 15px; color: #7f8c8d; font-size: 0.9em; }
@@ -104,15 +119,40 @@
         #reportHeader h2 { margin-top: 0; margin-bottom: 10px; color: #2c3e50; }
         #reportHeader p { margin: 5px 0; color: #555; }
         
+        /* 【核心修改】讓報告表格可以水平滾動 */
+        .report-detailed-table {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* 優化iOS滾動體驗 */
+            position: relative; /* Needed for sticky children */
+            margin-top: 20px; /* Add margin to separate from header */
+        }
         .report-detailed-table table { 
             width: 100%; font-size: 0.9em; border-collapse: collapse; table-layout: fixed; 
+            min-width: 900px; /* 設定最小寬度觸發滾動 */
         }
         .report-detailed-table th, .report-detailed-table td { 
-            border: 1px solid #ccc; padding: 6px; text-align: center; word-wrap: break-word;
+            border: 1px solid #ccc; padding: 6px 2px; text-align: center; word-wrap: break-word;
         }
         .report-detailed-table th { background-color: #f2f2f2; }
-        .report-detailed-table th:first-child, .report-detailed-table td:first-child {
-            width: 18%;
+        
+        /* 凍結欄位 - 報告表格 */
+        .report-detailed-table th:first-child {
+            width: 18%; /* Match desktop table width for behavior label */
+            position: sticky;
+            left: 0;
+            z-index: 3; /* Header above all */
+            background-color: #f2f2f2; /* Match header background */
+            text-align: left; /* Keep left alignment for behavior labels */
+            padding-left: 8px;
+        }
+        .report-detailed-table td:first-child {
+            width: 18%; /* Match header width */
+            position: sticky;
+            left: 0;
+            z-index: 1; /* Data cells below sticky header */
+            background-color: #f8f9fa; /* Light background for the sticky column */
+            text-align: left; /* Keep left alignment for behavior labels */
+            padding-left: 8px;
         }
         .report-detailed-table th:last-child, .report-detailed-table td:last-child {
             width: 8%;
@@ -122,14 +162,18 @@
         .report-notes-section h3 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
         .report-notes-section .note-item { margin-bottom: 20px; }
         .report-notes-section label { font-weight: bold; display: block; margin-bottom: 8px; color: #34495e; }
-        .report-notes-section textarea { width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; box-sizing: border-box; }
+        .report-notes-section textarea { width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; box-sizing: border-box; resize: vertical; background-color: #f8f9fa; }
+        
         .report-general-notes { margin-top: 25px; }
         .report-general-notes h4 { margin-top: 0; color: #34495e; margin-bottom: 10px; }
-        .report-general-notes textarea { width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; box-sizing: border-box;}
+        .report-general-notes textarea { width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; box-sizing: border-box; resize: vertical; background-color: #f8f9fa;}
+        
         .report-buttons { text-align: right; margin-top: 20px; }
         .report-buttons button { padding: 10px 20px; font-size: 1em; border: none; border-radius: 5px; cursor: pointer; color: white; margin-left: 10px; }
         #exportPdfBtn { background-color: #c0392b; }
         #exportTxtBtn { background-color: #2980b9; }
+        #exportImageBtn { background-color: #1abc9c; } /* New button style */
+        #exportImageBtn:hover { background-color: #16a085; }
         #closeReportBtn { background-color: #7f8c8d; }
         
         /* --- 使用說明彈窗 --- */
@@ -183,26 +227,27 @@
             .status-message { text-align: center; margin-bottom: 10px; }
             .control-buttons { justify-content: space-around; }
             
-            /* 主觀察表格: 縮小字體 */
+            /* 主觀察表格: 縮小字體, 調整凍結欄寬度 */
             .table-container {
-                overflow-x: visible;
+                overflow-x: auto; /* Keep overflow-x for sticky column */
             }
             #observationTable {
-                min-width: 100%;
+                min-width: 100%; /* Ensure width to trigger scroll for internal data cells */
                 font-size: 0.7em;
             }
             #observationTable th, #observationTable td {
                 padding: 6px 2px;
             }
             #observationTable th:first-child, #observationTable td.behavior-label {
-                width: 28%;
+                width: 150px; /* Reduced width for smaller screens */
                 font-size: 0.9em;
+                padding-left: 5px;
             }
             #observationTable th:last-child, #observationTable td.total-cell {
                 width: 12%;
             }
 
-            /* 【核心修改】報告彈窗響應式調整 */
+            /* 報告彈窗響應式調整 */
             .report-overlay { padding: 10px; }
             .report-content { padding: 15px; }
             #reportHeader h2 { font-size: 1.3em; }
@@ -214,9 +259,16 @@
             }
             .report-detailed-table table {
                 min-width: 900px; /* 設定最小寬度觸發滾動 */
-                font-size: 0.85em; /* 維持可讀的字體大小 */
+                font-size: 0.8em; /* 維持可讀的字體大小 */
             }
             
+            /* 調整報告表格凍結欄寬度 */
+            .report-detailed-table th:first-child,
+            .report-detailed-table td:first-child {
+                width: 150px; /* Reduced width */
+                padding-left: 5px;
+            }
+
             /* 報告按鈕垂直排列 */
             .report-buttons {
                 text-align: center;
@@ -236,13 +288,22 @@
             #observationTable th, #observationTable td {
                 padding: 4px 1px;
             }
+            /* 進一步縮小凍結欄寬度 */
+            #observationTable th:first-child, #observationTable td.behavior-label {
+                width: 120px;
+            }
+            /* 進一步縮小報告表格凍結欄寬度 */
+            .report-detailed-table th:first-child,
+            .report-detailed-table td:first-child {
+                width: 120px;
+            }
         }
 
         /* --- 列印專用樣式 --- */
         @media print {
             @page { size: landscape; margin: 1cm; }
 
-            body > *:not(.report-overlay) { display: none; }
+            body > *:not(.report-overlay) { display: none; } /* Hide everything except the report overlay */
             .report-overlay { 
                 position: static; display: block !important; width: 100%; height: auto; 
                 background: none; padding: 0; margin: 0; overflow: visible; 
@@ -251,7 +312,7 @@
                 box-shadow: none; border: none; padding: 0; margin: 0; width: 100%; 
                 max-width: 100%; max-height: none; overflow: visible; border-radius: 0; 
             }
-            .report-buttons { display: none; }
+            .report-buttons { display: none; } /* Hide buttons in print */
             body { padding: 0; margin: 0; background-color: #fff; font-size: 10pt; }
 
             .report-detailed-table table {
@@ -260,8 +321,16 @@
             .report-detailed-table th, .report-detailed-table td {
                 border: 1px solid #999; padding: 4px 2px; text-align: center; overflow: hidden; word-wrap: break-word;
             }
-            .report-detailed-table th:first-child, .report-detailed-table td:first-child {
-                width: 18%; text-align: left;
+            /* Disable sticky behavior for print */
+            .report-detailed-table th:first-child {
+                position: static; /* Disable sticky */
+                width: 18%; text-align: left; padding-left: 2px; 
+                background-color: #f2f2f2 !important; /* Ensure background is retained */
+            }
+            .report-detailed-table td:first-child {
+                position: static; /* Disable sticky */
+                width: 18%; text-align: left; padding-left: 2px; 
+                background-color: #f8f9fa !important; /* Ensure background is retained */
             }
             .report-detailed-table th:last-child, .report-detailed-table td:last-child {
                 width: 7%;
@@ -365,12 +434,14 @@
             <ul>
                 <li>觀察完成或中途皆可點擊 <i class="fa-solid fa-file-invoice"></i> <strong>產生觀察報告</strong>。</li>
                 <li>報告中會包含詳細的數據表格，並提供「詳細行為註記」與「整體觀察備註」的文字編輯區。</li>
-                <li>在報告視窗中，可點擊 <i class="fa-solid fa-file-pdf"></i> <strong>匯出為 PDF</strong> (將觸發瀏覽器的列印功能) 或 <i class="fa-solid fa-file-lines"></i> <strong>匯出為 TXT</strong> 將報告儲存為純文字檔。</li>
+                <li>在報告視窗中，可點擊 <i class="fa-solid fa-file-pdf"></i> <strong>匯出為 PDF</strong> (將觸發瀏覽器的列印功能)、 <i class="fa-solid fa-file-lines"></i> <strong>匯出為 TXT</strong> 將報告儲存為純文字檔，或 <i class="fa-solid fa-image"></i> <strong>匯出為圖檔 (PNG)</strong>。</li>
             </ul>
         </div>
         <div class="resize-handle" id="resizeHandle"></div>
     </div>
     
+    <!-- 從 CDN 引入 html2canvas (用於匯出圖片) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- 從 CDN 引入 FileSaver.js，確保匯出穩定 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
     
@@ -409,6 +480,8 @@
         const INTERVAL_DURATION = 30;
 
         let data = [];
+        // Store detailed notes for each behavior, array index corresponds to behavior index
+        let behaviorDetailNotes = Array(behaviors.length).fill(''); 
         let timerId = null;
         let isRunning = false;
         let isPaused = false;
@@ -419,6 +492,7 @@
             tableHeader.innerHTML = '';
             tableBody.innerHTML = '';
             data = Array(behaviors.length).fill(0).map(() => Array(TOTAL_INTERVALS).fill(0));
+            behaviorDetailNotes = Array(behaviors.length).fill(''); // Reset behavior specific notes
 
             const headerRow = document.createElement('tr');
             headerRow.innerHTML = `<th class="behavior-label">行為項目</th>`;
@@ -428,7 +502,8 @@
 
             behaviors.forEach((behavior, rowIndex) => {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td class="behavior-label">${behavior}</td>`;
+                // Added behavior-label class for sticky column
+                row.innerHTML = `<td class="behavior-label">${behavior}</td>`; 
                 for (let colIndex = 0; colIndex < TOTAL_INTERVALS; colIndex++) {
                     row.innerHTML += `<td class="data-cell" id="cell-${rowIndex}-${colIndex}" data-row="${rowIndex}" data-col="${colIndex}">0</td>`;
                 }
@@ -473,6 +548,8 @@
             const rowIndex = parseInt(cell.dataset.row);
             const colIndex = parseInt(cell.dataset.col);
 
+            if (isNaN(rowIndex) || isNaN(colIndex)) return; // Ensure valid row/col index
+
             if (action === 'increase') data[rowIndex][colIndex]++;
             else if (action === 'decrease' && data[rowIndex][colIndex] > 0) data[rowIndex][colIndex]--;
             
@@ -496,7 +573,7 @@
                     endObservation();
                 } else {
                     timeLeft = INTERVAL_DURATION;
-                    timerDisplay.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> 00:${timeLeft}`;
+                    timerDisplay.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> 00:${timeLeft.toString().padStart(2, '0')}`;
                     timerDisplay.style.color = '#3498db';
                     highlightCurrentColumn();
                     statusMessage.textContent = `進行中: 區間 ${currentIntervalIndex + 1} / ${TOTAL_INTERVALS}`;
@@ -558,6 +635,19 @@
                 initialize();
             }
         }
+
+        // Function to synchronize notes from the report back to state
+        function syncReportNotes() {
+            behaviors.forEach((_, index) => {
+                const textarea = document.getElementById(`report-note-${index}`);
+                if (textarea) behaviorDetailNotes[index] = textarea.value;
+            });
+            // Update the main general notes textarea as well
+            const reportGeneralNotesTextarea = document.getElementById('reportGeneralNotesTextarea');
+            if (reportGeneralNotesTextarea) {
+                generalNotesTextarea.value = reportGeneralNotesTextarea.value;
+            }
+        }
         
         function generateReport() {
             const observerName = observerNameInput.value.trim() || '（未填寫）';
@@ -568,7 +658,8 @@
             timeIntervals.forEach(interval => detailedTableHTML += `<th>${interval}</th>`);
             detailedTableHTML += `<th>總次數</th></tr></thead><tbody>`;
             behaviors.forEach((behavior, rowIndex) => {
-                detailedTableHTML += `<tr><td>${behavior}</td>`;
+                // Added behavior-label class for sticky column in report
+                detailedTableHTML += `<tr><td class="behavior-label">${behavior}</td>`; 
                 let total = 0;
                 data[rowIndex].forEach(count => {
                     detailedTableHTML += `<td>${count}</td>`;
@@ -578,20 +669,20 @@
             });
             detailedTableHTML += `</tbody></table></div>`;
 
-            let notesHTML = '<div class="report-notes-section"><h3><i class="fa-solid fa-pen-to-square"></i>詳細行為註記</h3>';
+            let notesHTML = '<div class="report-notes-section"><h3><i class="fa-solid fa-pen-to-square"></i>詳細行為註記 (可編輯)</h3>';
             behaviors.forEach((behavior, index) => {
                 notesHTML += `
                     <div class="note-item">
                         <label for="report-note-${index}">${behavior}</label>
-                        <textarea id="report-note-${index}" placeholder="關於「${behavior.split(' ')[0]}」的筆記..."></textarea>
+                        <textarea id="report-note-${index}" placeholder="關於「${behavior.split(' ')[0]}」的筆記...">${behaviorDetailNotes[index] || ''}</textarea>
                     </div>`;
             });
             notesHTML += '</div>';
 
             let generalNotesReportHTML = `
                 <div class="report-general-notes">
-                    <h4><i class="fa-solid fa-feather-pointed"></i>整體觀察備註</h4>
-                    <textarea id="reportGeneralNotesTextarea" placeholder="記錄學生的整體狀況、環境因素或其他值得注意的事件..."></textarea>
+                    <h4><i class="fa-solid fa-feather-pointed"></i>整體觀察備註 (可編輯)</h4>
+                    <textarea id="reportGeneralNotesTextarea" placeholder="記錄學生的整體狀況、環境因素或其他值得注意的事件...">${generalNotesTextarea.value || ''}</textarea>
                 </div>`;
 
             const fullReportHTML = `
@@ -605,6 +696,7 @@
                 ${notesHTML}
                 ${generalNotesReportHTML}
                 <div class="report-buttons">
+                    <button id="exportImageBtn"><i class="fa-solid fa-image"></i>匯出為圖檔</button>
                     <button id="exportTxtBtn"><i class="fa-solid fa-file-lines"></i>匯出為 TXT</button>
                     <button id="exportPdfBtn"><i class="fa-solid fa-file-pdf"></i>匯出為 PDF</button>
                     <button id="closeReportBtn"><i class="fa-solid fa-xmark"></i>關閉</button>
@@ -612,12 +704,13 @@
             `;
             
             reportContent.innerHTML = fullReportHTML;
-            const mainNotesValue = generalNotesTextarea.value;
-            document.getElementById('reportGeneralNotesTextarea').value = mainNotesValue;
             reportOverlay.style.display = 'flex';
-            document.getElementById('exportTxtBtn').addEventListener('click', exportToTxt);
-            document.getElementById('exportPdfBtn').addEventListener('click', () => window.print());
-            document.getElementById('closeReportBtn').addEventListener('click', () => reportOverlay.style.display = 'none');
+            
+            // Add event listeners for the generated buttons
+            document.getElementById('exportTxtBtn').addEventListener('click', () => { syncReportNotes(); exportToTxt(); });
+            document.getElementById('exportPdfBtn').addEventListener('click', () => { syncReportNotes(); window.print(); });
+            document.getElementById('exportImageBtn').addEventListener('click', () => { syncReportNotes(); exportToImage(); });
+            document.getElementById('closeReportBtn').addEventListener('click', () => { syncReportNotes(); reportOverlay.style.display = 'none'; });
         }
 
         function exportToTxt() {
@@ -635,10 +728,13 @@
             textContent += `觀察人: ${observerName}\n`;
             textContent += `觀察日期: ${observationDate}\n`;
             textContent += '========================================\n\n';
+            
+            // Helper for consistent padding, considering Chinese characters take more space
             const padEnd = (str, length) => {
                 let s = String(str);
-                const chineseChars = s.match(/[\u4e00-\u9fa5]/g) || [];
-                const effectiveLength = s.length + (chineseChars ? chineseChars.length : 0);
+                // Estimate effective length by counting Chinese characters as roughly 2 spaces
+                const chineseChars = (s.match(/[\u4e00-\u9fa5]/g) || []).length;
+                const effectiveLength = s.length + chineseChars; 
                 const paddingNeeded = length > effectiveLength ? length - effectiveLength : 0;
                 return s + ' '.repeat(paddingNeeded);
             };
@@ -647,13 +743,15 @@
                 const paddingNeeded = length > s.length ? length - s.length : 0;
                 return ' '.repeat(paddingNeeded) + s;
             }
+
             let tableHeaderTxt = padEnd('行為項目', 25);
             timeIntervals.forEach(interval => {
                 tableHeaderTxt += padStart(interval, 5);
             });
             tableHeaderTxt += padStart('總次數', 8);
             textContent += tableHeaderTxt + '\n';
-            textContent += '-'.repeat(tableHeaderTxt.length - 10) + '\n';
+            textContent += '-'.repeat(tableHeaderTxt.length - 10) + '\n'; // Adjust separator length to match table header
+
             behaviors.forEach((behavior, rowIndex) => {
                 let rowTxt = padEnd(behavior, 25);
                 let total = 0;
@@ -667,11 +765,13 @@
             textContent += '\n';
             textContent += '--- 詳細行為註記 ---\n';
             let hasDetailNotes = false;
-            reportContent.querySelectorAll('.report-notes-section .note-item').forEach(item => {
-                const label = item.querySelector('label').textContent;
-                const text = item.querySelector('textarea').value;
-                if (text.trim()) {
-                    textContent += `\n${label}:\n${text}\n`;
+            // Get notes directly from the `behaviorDetailNotes` state or report textareas
+            behaviors.forEach((behavior, index) => {
+                const currentNote = document.getElementById(`report-note-${index}`) ? 
+                                    document.getElementById(`report-note-${index}`).value : 
+                                    behaviorDetailNotes[index];
+                if (currentNote.trim()) {
+                    textContent += `\n${behavior}:\n${currentNote}\n`;
                     hasDetailNotes = true;
                 }
             });
@@ -679,7 +779,9 @@
                 textContent += '(無)\n';
             }
             textContent += '\n--- 整體觀察備註 ---\n';
-            const reportGeneralNotesText = document.getElementById('reportGeneralNotesTextarea').value;
+            const reportGeneralNotesText = document.getElementById('reportGeneralNotesTextarea') ?
+                                           document.getElementById('reportGeneralNotesTextarea').value :
+                                           generalNotesTextarea.value;
             if (reportGeneralNotesText.trim()) {
                 textContent += reportGeneralNotesText + '\n';
             } else {
@@ -688,6 +790,52 @@
             const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
             saveAs(blob, `${subjectName}_兒童專注力測試綜合觀察報告.txt`);
         }
+
+        function exportToImage() {
+            if (typeof html2canvas === 'undefined' || typeof saveAs === 'undefined') {
+                alert('圖檔匯出工具載入失敗，請檢查網路連線並刷新頁面重試。');
+                return;
+            }
+
+            const reportEl = document.getElementById('reportContent');
+            const subjectName = subjectNameInput.value.trim() || '觀察報告';
+            const reportDate = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '');
+
+            // Temporarily hide buttons for the screenshot
+            const reportButtons = reportEl.querySelector('.report-buttons');
+            const originalDisplay = reportButtons.style.display;
+            reportButtons.style.display = 'none';
+
+            // Temporarily adjust report content height/overflow to ensure full content is captured
+            const originalReportContentMaxHeight = reportEl.style.maxHeight;
+            const originalReportContentOverflowY = reportEl.style.overflowY;
+            reportEl.style.maxHeight = 'fit-content'; // Allow content to determine height
+            reportEl.style.overflowY = 'visible'; // Ensure all content is visible for capture
+
+            html2canvas(reportEl, { 
+                scale: 2, // Increase scale for higher resolution image
+                useCORS: true,
+                // windowWidth: reportEl.scrollWidth, // Try to capture full scrollable width if needed
+                // windowHeight: reportEl.scrollHeight,
+            }).then(canvas => {
+                // Restore original styles
+                reportButtons.style.display = originalDisplay;
+                reportEl.style.maxHeight = originalReportContentMaxHeight;
+                reportEl.style.overflowY = originalReportContentOverflowY;
+                
+                canvas.toBlob(function(blob) {
+                    saveAs(blob, `${subjectName}_綜合觀察報告_${reportDate}.png`);
+                }, 'image/png');
+            }).catch(error => {
+                console.error('Error generating image:', error);
+                alert('匯出圖檔失敗，請稍後再試。');
+                // Ensure buttons and styles are restored even on error
+                reportButtons.style.display = originalDisplay;
+                reportEl.style.maxHeight = originalReportContentMaxHeight;
+                reportEl.style.overflowY = originalReportContentOverflowY;
+            });
+        }
+
 
         // --- 事件監聽器 ---
         startBtn.addEventListener('click', handleStartPauseResume);
@@ -774,8 +922,9 @@
             const onResizeMove = (e) => {
                 if (!isResizing) return;
                 const coords = getEventCoords(e);
-                const newWidth = startWidth + (coords.clientX - startX);
-                const newHeight = startHeight + (coords.clientY - startY);
+                // Ensure min/max size constraints (match CSS min-width/height)
+                const newWidth = Math.max(element.style.minWidth ? parseInt(element.style.minWidth) : 350, startWidth + (coords.clientX - startX));
+                const newHeight = Math.max(element.style.minHeight ? parseInt(element.style.minHeight) : 300, startHeight + (coords.clientY - startY));
                 element.style.width = `${newWidth}px`;
                 element.style.height = `${newHeight}px`;
                 if (e.type === 'touchmove') e.preventDefault();
